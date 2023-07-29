@@ -1,6 +1,6 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Console\Commands;
+namespace Nadi\Laravel\Console\Commands;
 
 use Illuminate\Console\Command;
 

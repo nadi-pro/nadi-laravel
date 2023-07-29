@@ -1,11 +1,11 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Handler;
+namespace Nadi\Laravel\Handler;
 
 use CleaniqueCoders\Nadi\Data\Type;
-use CleaniqueCoders\NadiLaravel\Actions\ExceptionContext;
-use CleaniqueCoders\NadiLaravel\Actions\ExtractTags;
-use CleaniqueCoders\NadiLaravel\Data\ExceptionEntry;
+use Nadi\Laravel\Actions\ExceptionContext;
+use Nadi\Laravel\Actions\ExtractTags;
+use Nadi\Laravel\Data\ExceptionEntry;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Arr;
 use Throwable;

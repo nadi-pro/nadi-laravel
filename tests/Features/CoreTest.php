@@ -1,8 +1,8 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Tests\Features;
+namespace Nadi\Laravel\Tests\Features;
 
-use CleaniqueCoders\NadiLaravel\Tests\TestCase;
+use Nadi\Laravel\Tests\TestCase;
 
 class CoreTest extends TestCase
 {

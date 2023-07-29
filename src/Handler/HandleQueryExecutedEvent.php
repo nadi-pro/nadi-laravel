@@ -1,10 +1,10 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Handler;
+namespace Nadi\Laravel\Handler;
 
 use CleaniqueCoders\Nadi\Data\Type;
-use CleaniqueCoders\NadiLaravel\Concerns\FetchesStackTrace;
-use CleaniqueCoders\NadiLaravel\Data\Entry;
+use Nadi\Laravel\Concerns\FetchesStackTrace;
+use Nadi\Laravel\Data\Entry;
 use Illuminate\Database\Events\QueryExecuted;
 
 class HandleQueryExecutedEvent extends Base

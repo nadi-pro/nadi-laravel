@@ -1,12 +1,12 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Handler;
+namespace Nadi\Laravel\Handler;
 
 use CleaniqueCoders\Nadi\Data\Type;
-use CleaniqueCoders\NadiLaravel\Actions\ExceptionContext;
-use CleaniqueCoders\NadiLaravel\Actions\ExtractProperties;
-use CleaniqueCoders\NadiLaravel\Actions\ExtractTags;
-use CleaniqueCoders\NadiLaravel\Data\Entry;
+use Nadi\Laravel\Actions\ExceptionContext;
+use Nadi\Laravel\Actions\ExtractProperties;
+use Nadi\Laravel\Actions\ExtractTags;
+use Nadi\Laravel\Data\Entry;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Log;

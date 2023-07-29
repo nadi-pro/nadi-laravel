@@ -1,11 +1,11 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Handler;
+namespace Nadi\Laravel\Handler;
 
 use CleaniqueCoders\Nadi\Data\Type;
-use CleaniqueCoders\NadiLaravel\Actions\ExtractTags;
-use CleaniqueCoders\NadiLaravel\Actions\FormatModel;
-use CleaniqueCoders\NadiLaravel\Data\Entry;
+use Nadi\Laravel\Actions\ExtractTags;
+use Nadi\Laravel\Actions\FormatModel;
+use Nadi\Laravel\Data\Entry;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Events\NotificationFailed;

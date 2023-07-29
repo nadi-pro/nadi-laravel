@@ -1,8 +1,8 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Handler;
+namespace Nadi\Laravel\Handler;
 
-use CleaniqueCoders\NadiLaravel\Transporter;
+use Nadi\Laravel\Transporter;
 
 class Base
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Concerns;
+namespace Nadi\Laravel\Concerns;
 
 use Illuminate\Support\Str;
 

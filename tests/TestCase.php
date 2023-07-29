@@ -1,6 +1,6 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Tests;
+namespace Nadi\Laravel\Tests;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {

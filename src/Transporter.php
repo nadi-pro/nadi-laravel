@@ -1,6 +1,6 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel;
+namespace Nadi\Laravel;
 
 use CleaniqueCoders\Nadi\Transporter\Contract;
 

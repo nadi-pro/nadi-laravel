@@ -1,6 +1,6 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Metric;
+namespace Nadi\Laravel\Metric;
 
 use CleaniqueCoders\Nadi\Metric\Base;
 use CleaniqueCoders\Nadi\Support\Arr;

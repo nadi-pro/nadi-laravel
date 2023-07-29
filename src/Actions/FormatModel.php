@@ -1,6 +1,6 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Actions;
+namespace Nadi\Laravel\Actions;
 
 use BackedEnum;
 use Illuminate\Database\Eloquent\Relations\Pivot;

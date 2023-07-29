@@ -1,9 +1,9 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Data;
+namespace Nadi\Laravel\Data;
 
 use CleaniqueCoders\Nadi\Data\Entry as DataEntry;
-use CleaniqueCoders\NadiLaravel\Concerns\InteractsWithMetric;
+use Nadi\Laravel\Concerns\InteractsWithMetric;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
 

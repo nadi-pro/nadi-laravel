@@ -1,11 +1,11 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Concerns;
+namespace Nadi\Laravel\Concerns;
 
-use CleaniqueCoders\NadiLaravel\Metric\Application;
-use CleaniqueCoders\NadiLaravel\Metric\Framework;
-use CleaniqueCoders\NadiLaravel\Metric\Http;
-use CleaniqueCoders\NadiLaravel\Metric\Network;
+use Nadi\Laravel\Metric\Application;
+use Nadi\Laravel\Metric\Framework;
+use Nadi\Laravel\Metric\Http;
+use Nadi\Laravel\Metric\Network;
 
 trait InteractsWithMetric
 {

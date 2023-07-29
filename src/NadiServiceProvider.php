@@ -1,10 +1,10 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel;
+namespace Nadi\Laravel;
 
-use CleaniqueCoders\NadiLaravel\Console\Commands\InstallCommand;
-use CleaniqueCoders\NadiLaravel\Console\Commands\TestCommand;
-use CleaniqueCoders\NadiLaravel\Console\Commands\VerifyCommand;
+use Nadi\Laravel\Console\Commands\InstallCommand;
+use Nadi\Laravel\Console\Commands\TestCommand;
+use Nadi\Laravel\Console\Commands\VerifyCommand;
 use Illuminate\Support\ServiceProvider;
 
 class NadiServiceProvider extends ServiceProvider
@@ -37,7 +37,7 @@ class NadiServiceProvider extends ServiceProvider
         }
 
         app()->singleton('nadi', function () {
-            return \CleaniqueCoders\NadiLaravel\Transporter::make();
+            return \Nadi\Laravel\Transporter::make();
         });
 
         foreach (config('nadi.observe') as $event => $listeners) {

@@ -1,15 +1,15 @@
 {
-    "name": "cleaniquecoders/nadi-laravel",
+    "name": "nadi-pro/nadi-laravel",
     "description": "Handle Laravel Exception Events",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "CleaniqueCoders\\NadiLaravel\\": "src/"
+            "Nadi\\Laravel\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "CleaniqueCoders\\NadiLaravel\\Tests\\": "tests/"
+            "Nadi\\Laravel\\Tests\\": "tests/"
         }
     },
     "authors": [

@@ -1,9 +1,9 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Handler;
+namespace Nadi\Laravel\Handler;
 
 use CleaniqueCoders\Nadi\Data\Type;
-use CleaniqueCoders\NadiLaravel\Data\Entry;
+use Nadi\Laravel\Data\Entry;
 use Illuminate\Console\Events\CommandFinished;
 use Symfony\Component\Console\Command\Command;
 

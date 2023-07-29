@@ -1,6 +1,6 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Actions;
+namespace Nadi\Laravel\Actions;
 
 use Illuminate\Support\Str;
 use Throwable;

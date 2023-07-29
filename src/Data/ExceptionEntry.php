@@ -1,9 +1,9 @@
 <?php
 
-namespace CleaniqueCoders\NadiLaravel\Data;
+namespace Nadi\Laravel\Data;
 
 use CleaniqueCoders\Nadi\Data\ExceptionEntry as DataExceptionEntry;
-use CleaniqueCoders\NadiLaravel\Concerns\InteractsWithMetric;
+use Nadi\Laravel\Concerns\InteractsWithMetric;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 
 class ExceptionEntry extends DataExceptionEntry
