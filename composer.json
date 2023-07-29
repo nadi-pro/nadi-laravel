@@ -48,10 +48,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "CleaniqueCoders\\NadiLaravel\\NadiServiceProvider"
+                "Nadi\\Laravel\\NadiServiceProvider"
             ],
             "aliases": {
-                "Nadi": "CleaniqueCoders\\NadiLaravel\\Facades\\Nadi"
+                "Nadi": "Nadi\\Laravel\\Facades\\Nadi"
             }
         }
     },

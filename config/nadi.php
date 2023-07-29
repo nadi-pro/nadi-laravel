@@ -1,11 +1,11 @@
 <?php
 
-use CleaniqueCoders\NadiLaravel\Handler\HandleCommandEvent;
-use CleaniqueCoders\NadiLaravel\Handler\HandleExceptionEvent;
-use CleaniqueCoders\NadiLaravel\Handler\HandleFailedJobEvent;
-use CleaniqueCoders\NadiLaravel\Handler\HandleHttpRequestEvent;
-use CleaniqueCoders\NadiLaravel\Handler\HandleNotificationFailedEvent;
-use CleaniqueCoders\NadiLaravel\Handler\HandleQueryExecutedEvent;
+use Nadi\Laravel\Handler\HandleCommandEvent;
+use Nadi\Laravel\Handler\HandleExceptionEvent;
+use Nadi\Laravel\Handler\HandleFailedJobEvent;
+use Nadi\Laravel\Handler\HandleHttpRequestEvent;
+use Nadi\Laravel\Handler\HandleNotificationFailedEvent;
+use Nadi\Laravel\Handler\HandleQueryExecutedEvent;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Foundation\Http\Events\RequestHandled;
@@ -26,7 +26,7 @@ return [
             'key' => env('NADI_API_KEY'),
             'token' => env('NADI_APP_KEY'),
             'version' => env('NADI_VERSION', 'v1'),
-            'endpoint' => env('NADI_ENDPOINT', 'https://nadi.cleaniquecoders.com/api'),
+            'endpoint' => env('NADI_ENDPOINT', 'https://api.nadi.pro/collector'),
         ],
     ],
 
