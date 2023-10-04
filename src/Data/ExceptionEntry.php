@@ -2,7 +2,7 @@
 
 namespace Nadi\Laravel\Data;
 
-use CleaniqueCoders\Nadi\Data\ExceptionEntry as DataExceptionEntry;
+use Nadi\Data\ExceptionEntry as DataExceptionEntry;
 use Nadi\Laravel\Concerns\InteractsWithMetric;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 

@@ -2,7 +2,7 @@
 
 namespace Nadi\Laravel\Handler;
 
-use CleaniqueCoders\Nadi\Data\Type;
+use Nadi\Data\Type;
 use Nadi\Laravel\Actions\FormatModel;
 use Nadi\Laravel\Data\Entry;
 use Illuminate\Database\Eloquent\Model;

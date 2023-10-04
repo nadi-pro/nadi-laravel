@@ -2,8 +2,8 @@
 
 namespace Nadi\Laravel\Metric;
 
-use CleaniqueCoders\Nadi\Metric\Base;
-use CleaniqueCoders\Nadi\Support\Arr;
+use Nadi\Metric\Base;
+use Nadi\Support\Arr;
 
 class Http extends Base
 {

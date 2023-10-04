@@ -2,7 +2,7 @@
 
 namespace Nadi\Laravel\Handler;
 
-use CleaniqueCoders\Nadi\Data\Type;
+use Nadi\Data\Type;
 use Nadi\Laravel\Concerns\FetchesStackTrace;
 use Nadi\Laravel\Data\Entry;
 use Illuminate\Database\Events\QueryExecuted;

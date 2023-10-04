@@ -2,7 +2,7 @@
 
 namespace Nadi\Laravel\Data;
 
-use CleaniqueCoders\Nadi\Data\Entry as DataEntry;
+use Nadi\Data\Entry as DataEntry;
 use Nadi\Laravel\Concerns\InteractsWithMetric;
 use Illuminate\Support\Facades\Auth;
 use Throwable;

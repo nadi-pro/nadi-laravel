@@ -2,7 +2,7 @@
 
 namespace Nadi\Laravel\Metric;
 
-use CleaniqueCoders\Nadi\Metric\Base;
+use Nadi\Metric\Base;
 
 class Application extends Base
 {

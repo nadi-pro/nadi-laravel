@@ -2,7 +2,7 @@
 
 namespace Nadi\Laravel\Handler;
 
-use CleaniqueCoders\Nadi\Data\Type;
+use Nadi\Data\Type;
 use Nadi\Laravel\Actions\ExtractTags;
 use Nadi\Laravel\Actions\FormatModel;
 use Nadi\Laravel\Data\Entry;
