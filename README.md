@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://github.com/cleaniquecoders/nadi-laravel/actions"><img src="https://github.com/cleaniquecoders/nadi-laravel/actions/workflows/run-tests.yml/badge.svg" alt="Build Status"></a>
+<a href="https://github.com/nadi-pro/nadi-laravel/actions"><img src="https://github.com/nadi-pro/nadi-laravel/actions/workflows/run-tests.yml/badge.svg" alt="Build Status"></a>
 </p>
 
 # Nadi Laravel Client
