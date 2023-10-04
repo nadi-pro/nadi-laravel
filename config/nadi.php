@@ -22,12 +22,6 @@ return [
         'log' => [
             'path' => env('NADI_STORAGE_PATH', storage_path('nadi/')),
         ],
-        'http' => [
-            'key' => env('NADI_API_KEY'),
-            'token' => env('NADI_APP_KEY'),
-            'version' => env('NADI_VERSION', 'v1'),
-            'endpoint' => env('NADI_ENDPOINT', 'https://api.nadi.pro/collector'),
-        ],
     ],
 
     'observe' => [
