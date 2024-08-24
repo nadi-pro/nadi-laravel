@@ -65,7 +65,7 @@ class Transporter
             ? FixedRateSampling::class
             : $strategies[$strategy];
 
-        if(! $class instanceof SamplingContract) {
+        if(! in_array(\Nadi\Sampling\Contract::class, class_implements($class))) {
             throw new \Exception("$class not implement \Nadi\Sampling\Contract", 500);
         }
 
