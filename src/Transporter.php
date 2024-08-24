@@ -79,7 +79,7 @@ class Transporter
 
     public function store(array $data)
     {
-        return $this->service->handle($this->data);
+        return $this->service->handle($data);
     }
 
     public function send()
