@@ -66,4 +66,20 @@ return [
             300, 302, 303, 304, 305, 306, 307, 308,
         ],
     ],
+
+    'sampling' => [
+        'strategy' => env('NADI_SAMPLING_STRATEGY', 'fixed_rate'), // The strategy to use: fixed_rate, dynamic_rate, interval
+        'config' => [
+            'sampling_rate' => env('NADI_SAMPLING_RATE', 0.1),       // 10% default rate
+            'base_rate' => env('NADI_SAMPLING_BASE_RATE', 0.05),              // Base rate for dynamic sampling
+            'load_factor' => env('NADI_SAMPLING_LOAD_FACTOR', 1.0),           // Load factor for dynamic sampling
+            'interval_seconds' => env('NADI_SAMPLING_INTERVAL_SECONDS', 60),  // Interval in seconds for interval sampling
+        ],
+        'strategies' => [
+            'dynamic_rate' => Nadi\Sampling\DynamicRateSampling::class,
+            'fixed_rate' => Nadi\Sampling\FixedRateSampling::class,
+            'interval' => Nadi\Sampling\IntervalSampling::class,
+            'peak_load' => Nadi\Sampling\PeakLoadSampling::class,
+        ],
+    ],
 ];
