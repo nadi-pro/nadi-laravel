@@ -2,71 +2,53 @@ name: run-tests
 
 on:
   push:
-    branches: [master]
+    branches: [master, 1.0]
   pull_request:
-    branches: [master]
+    branches: [master, 1.0]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
-        php: [8.2, 8.1, 8.0, 7.4]
-        laravel: [10.*, 9.*, 8.*, 7.*, 6.*]
-        stability: [prefer-lowest, prefer-stable]
+        php: [8.3, 8.2, 8.1]
+        laravel: [11.*, 10.*, 9.*]
+        stability: [prefer-stable]
         include:
-          - laravel: 10.*
-            testbench: 8.*
-            carbon: ^2.63
+          - php: 8.3
+            laravel: 11.*
             ramsey: ^4.7
             phpunit: ^10.1
-          - laravel: 9.*
-            testbench: ^7.24
-            carbon: ^2.62.1
+          - php: 8.3
+            laravel: 10.*
+            ramsey: ^4.7
+            phpunit: ^10.1
+          - php: 8.2
+            laravel: 10.*
+            ramsey: ^4.7
+            phpunit: ^10.1
+          - php: 8.3
+            laravel: 9.*
             ramsey: ^4.7
             phpunit: ^9.0
-          - laravel: 8.*
-            testbench: ^6.27
-            carbon: ^2.53.1
+          - php: 8.2
+            laravel: 9.*
             ramsey: ^4.7
-            phpunit: ^8.0
-          - laravel: 7.*
-            testbench: ^5.8
-            carbon: ^2.31
-            ramsey: ^3.0
-            phpunit: ^8.0
-          - laravel: 6.*
-            testbench: 4.*
-            carbon: ^2.31
-            ramsey: ^3.0
-            phpunit: ^8.0
+            phpunit: ^9.0
+          - php: 8.1
+            laravel: 9.*
+            ramsey: ^4.7
+            phpunit: ^9.0
         exclude:
-          - laravel: 10.*
-            php: 8.0
-          - laravel: 10.*
-            php: 7.4
-          - laravel: 9.*
-            php: 7.4
-          - laravel: 8.*
-            php: 8.2
-          - laravel: 8.*
-            php: 8.1
-          - laravel: 8.*
-            php: 7.4
-          - laravel: 7.*
-            php: 8.2
-          - laravel: 7.*
-            php: 8.1
-          - laravel: 6.*
-            php: 8.2
-          - laravel: 6.*
-            php: 8.1
-          - laravel: 6.*
-            php: 8.0
+          - php: 8.2
+            laravel: 11.*
+          - php: 8.1
+            laravel: 11.*
+          - php: 8.1
+            laravel: 10.*
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
@@ -79,14 +61,9 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: none
 
-      - name: Setup problem matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:${{ matrix.carbon }}" "ramsey/uuid:${{ matrix.ramsey }}" --no-interaction --no-update
+          composer require "illuminate/support:${{ matrix.laravel }}" "ramsey/uuid:${{ matrix.ramsey }}" --no-interaction --no-update
           composer require "phpunit/phpunit:${{ matrix.phpunit }}" --no-interaction --no-update --dev
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
