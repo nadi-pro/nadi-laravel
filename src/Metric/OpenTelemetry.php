@@ -18,9 +18,9 @@ class OpenTelemetry extends Base
     {
         $metrics = [
             // Service identification
-            'service.name' => config('nadi.connections.opentelemetry.service_name', config('app.name', 'laravel-app')),
-            'service.version' => config('nadi.connections.opentelemetry.service_version', '1.0.0'),
-            'deployment.environment' => config('nadi.connections.opentelemetry.deployment_environment', config('app.env', 'production')),
+            OpenTelemetrySemanticConventions::SERVICE_NAME => config('nadi.connections.opentelemetry.service_name', config('app.name', 'laravel-app')),
+            OpenTelemetrySemanticConventions::SERVICE_VERSION => config('nadi.connections.opentelemetry.service_version', '1.0.0'),
+            OpenTelemetrySemanticConventions::DEPLOYMENT_ENVIRONMENT => config('nadi.connections.opentelemetry.deployment_environment', config('app.env', 'production')),
 
             // Telemetry SDK information
             'telemetry.sdk.name' => 'nadi-laravel',
@@ -44,11 +44,11 @@ class OpenTelemetry extends Base
 
         // Add optional service namespace and instance ID if configured
         if ($namespace = config('nadi.connections.opentelemetry.service_namespace')) {
-            $metrics['service.namespace'] = $namespace;
+            $metrics[OpenTelemetrySemanticConventions::SERVICE_NAMESPACE] = $namespace;
         }
 
         if ($instanceId = config('nadi.connections.opentelemetry.service_instance_id')) {
-            $metrics['service.instance.id'] = $instanceId;
+            $metrics[OpenTelemetrySemanticConventions::SERVICE_INSTANCE_ID] = $instanceId;
         }
 
         // Add container information if available

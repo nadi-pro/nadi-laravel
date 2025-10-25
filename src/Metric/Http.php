@@ -21,11 +21,11 @@ class Http extends Base
         $metrics = OpenTelemetrySemanticConventions::httpAttributes($request);
 
         // Add performance metrics
-        $metrics['http.client.duration'] = $startTime ? floor((microtime(true) - $startTime) * 1000) : null;
+        $metrics[OpenTelemetrySemanticConventions::HTTP_CLIENT_DURATION] = $startTime ? floor((microtime(true) - $startTime) * 1000) : null;
 
         // Add query string using OTel convention
         if ($queryString = $request->getQueryString()) {
-            $metrics['http.query'] = $queryString;
+            $metrics[OpenTelemetrySemanticConventions::HTTP_QUERY] = $queryString;
         }
 
         // Add headers with filtered sensitive data
@@ -40,7 +40,7 @@ class Http extends Base
             })
             ->toArray();
 
-        $metrics['http.headers'] = Arr::undot($headers);
+        $metrics[OpenTelemetrySemanticConventions::HTTP_HEADERS] = Arr::undot($headers);
 
         return $metrics;
     }

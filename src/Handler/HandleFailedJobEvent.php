@@ -98,11 +98,11 @@ class HandleFailedJobEvent extends Base
 
         // Add OpenTelemetry standard tags
         $jobClass = data_get($payload, 'displayName') ?? data_get($payload, 'job');
-        $tags[] = 'laravel.job.class:'.$jobClass;
-        $tags[] = 'laravel.job.queue:'.$event->job->getQueue();
+        $tags[] = OpenTelemetrySemanticConventions::LARAVEL_JOB_CLASS.':'.$jobClass;
+        $tags[] = OpenTelemetrySemanticConventions::LARAVEL_JOB_QUEUE.':'.$event->job->getQueue();
         $tags[] = 'laravel.job.status:failed';
-        $tags[] = 'exception.type:'.get_class($event->exception);
-        $tags[] = 'error.type:'.get_class($event->exception);
+        $tags[] = OpenTelemetrySemanticConventions::EXCEPTION_TYPE.':'.get_class($event->exception);
+        $tags[] = OpenTelemetrySemanticConventions::ERROR_TYPE.':'.get_class($event->exception);
 
         return $tags;
     }

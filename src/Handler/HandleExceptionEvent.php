@@ -90,17 +90,17 @@ class HandleExceptionEvent extends Base
 
         // Add OpenTelemetry standard tags
         $exception = $event->context['exception'];
-        $tags[] = 'exception.type:'.get_class($exception);
-        $tags[] = 'error.type:'.get_class($exception);
+        $tags[] = OpenTelemetrySemanticConventions::EXCEPTION_TYPE.':'.get_class($exception);
+        $tags[] = OpenTelemetrySemanticConventions::ERROR_TYPE.':'.get_class($exception);
 
         // Add Laravel-specific tags if request is available
         if (function_exists('request') && request() && request()->route()) {
             $route = request()->route();
             if ($routeName = $route->getName()) {
-                $tags[] = 'laravel.route.name:'.$routeName;
+                $tags[] = OpenTelemetrySemanticConventions::LARAVEL_ROUTE_NAME.':'.$routeName;
             }
             if ($action = $route->getActionName()) {
-                $tags[] = 'laravel.route.action:'.$action;
+                $tags[] = OpenTelemetrySemanticConventions::LARAVEL_ROUTE_ACTION.':'.$action;
             }
         }
 

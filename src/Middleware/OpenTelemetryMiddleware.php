@@ -165,10 +165,10 @@ class OpenTelemetryMiddleware
         }
 
         // Add additional request attributes
-        $span->setAttribute('http.request.size', $request->server('CONTENT_LENGTH') ?: 0);
+        $span->setAttribute(OpenTelemetrySemanticConventions::HTTP_REQUEST_SIZE, $request->server('CONTENT_LENGTH') ?: 0);
 
         if ($contentType = $request->header('Content-Type')) {
-            $span->setAttribute('http.request.content_type', $contentType);
+            $span->setAttribute(OpenTelemetrySemanticConventions::HTTP_REQUEST_CONTENT_TYPE, $contentType);
         }
     }
 
@@ -197,17 +197,17 @@ class OpenTelemetryMiddleware
         $span->setAttribute(OpenTelemetrySemanticConventions::HTTP_STATUS_CODE, $response->getStatusCode());
 
         if ($contentLength = $response->headers->get('Content-Length')) {
-            $span->setAttribute('http.response.size', (int) $contentLength);
+            $span->setAttribute(OpenTelemetrySemanticConventions::HTTP_RESPONSE_SIZE, (int) $contentLength);
         } else {
             // Estimate response size if Content-Length header is not set
             $content = $response->getContent();
             if (is_string($content)) {
-                $span->setAttribute('http.response.size', strlen($content));
+                $span->setAttribute(OpenTelemetrySemanticConventions::HTTP_RESPONSE_SIZE, strlen($content));
             }
         }
 
         if ($contentType = $response->headers->get('Content-Type')) {
-            $span->setAttribute('http.response.content_type', $contentType);
+            $span->setAttribute(OpenTelemetrySemanticConventions::HTTP_RESPONSE_CONTENT_TYPE, $contentType);
         }
     }
 

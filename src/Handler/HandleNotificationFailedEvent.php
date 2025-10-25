@@ -2,6 +2,7 @@
 
 namespace Nadi\Laravel\Handler;
 
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Events\NotificationFailed;
@@ -9,6 +10,7 @@ use Nadi\Data\Type;
 use Nadi\Laravel\Actions\ExtractTags;
 use Nadi\Laravel\Actions\FormatModel;
 use Nadi\Laravel\Data\Entry;
+use Nadi\Laravel\Support\OpenTelemetrySemanticConventions;
 
 class HandleNotificationFailedEvent extends Base
 {
@@ -23,13 +25,29 @@ class HandleNotificationFailedEvent extends Base
         $notifiable = $this->formatNotifiable($event->notifiable);
         $is_queued = in_array(ShouldQueue::class, class_implements($event->notification));
 
-        $this->store(Entry::make(Type::NOTIFICATION, [
+        // Generate OpenTelemetry semantic convention attributes
+        $otelAttributes = OpenTelemetrySemanticConventions::notificationAttributes($notification_class, $event->channel);
+
+        // Add user context if available
+        $userAttributes = OpenTelemetrySemanticConventions::userAttributes();
+
+        // Add session context if available
+        $sessionAttributes = OpenTelemetrySemanticConventions::sessionAttributes();
+
+        // Merge all OpenTelemetry attributes
+        $otelData = array_merge($otelAttributes, $userAttributes, $sessionAttributes);
+
+        $entryData = [
             'notification' => $notification_class,
             'queued' => $is_queued,
             'notifiable' => $notifiable,
             'channel' => $event->channel,
             'data' => $event->data,
-        ])
+            // Add OpenTelemetry semantic convention data
+            'otel' => $otelData,
+        ];
+
+        $this->store(Entry::make(Type::NOTIFICATION, $entryData)
             ->setHashFamily($this->hash($notification_class.$notifiable.date('Y-m-d')))
             ->tags($this->tags($event))
             ->toArray());

@@ -56,7 +56,7 @@ class HandleHttpRequestEvent extends Base
         // Add view information if available
         if ($event->response instanceof IlluminateResponse && $event->response->getOriginalContent() instanceof View) {
             $view = $event->response->getOriginalContent();
-            $otelData['laravel.view'] = $view->getPath();
+            $otelData[OpenTelemetrySemanticConventions::LARAVEL_VIEW] = $view->getPath();
         }
 
         $entryData = [

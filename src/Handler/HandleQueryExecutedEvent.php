@@ -42,8 +42,8 @@ class HandleQueryExecutedEvent extends Base
 
         if ($caller = $this->getCallerFromStackTrace()) {
             // Add code location to OTel data
-            $otelData['code.filepath'] = $caller['file'];
-            $otelData['code.lineno'] = $caller['line'];
+            $otelData[OpenTelemetrySemanticConventions::CODE_FILEPATH] = $caller['file'];
+            $otelData[OpenTelemetrySemanticConventions::CODE_LINENO] = $caller['line'];
 
             $entryData = [
                 'connection' => $event->connectionName,
@@ -83,13 +83,13 @@ class HandleQueryExecutedEvent extends Base
         }
 
         // Add OpenTelemetry standard tags
-        $tags[] = 'db.system:'.(config("database.connections.{$event->connectionName}.driver") ?? 'unknown');
-        $tags[] = 'db.connection.name:'.$event->connectionName;
+        $tags[] = OpenTelemetrySemanticConventions::DB_SYSTEM.':'.(config("database.connections.{$event->connectionName}.driver") ?? 'unknown');
+        $tags[] = OpenTelemetrySemanticConventions::DB_CONNECTION_NAME.':'.$event->connectionName;
 
         // Extract and tag operation
         if (preg_match('/^\s*(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE)\s+/i', $event->sql, $matches)) {
             $operation = strtoupper($matches[1]);
-            $tags[] = 'db.operation:'.$operation;
+            $tags[] = OpenTelemetrySemanticConventions::DB_OPERATION.':'.$operation;
         }
 
         // Mark as slow query
