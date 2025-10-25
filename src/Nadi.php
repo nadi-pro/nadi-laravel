@@ -2,6 +2,4 @@
 
 namespace Nadi\Laravel;
 
-class Nadi
-{
-}
+class Nadi {}

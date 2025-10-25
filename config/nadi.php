@@ -1,17 +1,17 @@
 <?php
 
-use Nadi\Laravel\Handler\HandleCommandEvent;
-use Nadi\Laravel\Handler\HandleExceptionEvent;
-use Nadi\Laravel\Handler\HandleFailedJobEvent;
-use Nadi\Laravel\Handler\HandleHttpRequestEvent;
-use Nadi\Laravel\Handler\HandleNotificationFailedEvent;
-use Nadi\Laravel\Handler\HandleQueryExecutedEvent;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Notifications\Events\NotificationFailed;
 use Illuminate\Queue\Events\JobFailed;
+use Nadi\Laravel\Handler\HandleCommandEvent;
+use Nadi\Laravel\Handler\HandleExceptionEvent;
+use Nadi\Laravel\Handler\HandleFailedJobEvent;
+use Nadi\Laravel\Handler\HandleHttpRequestEvent;
+use Nadi\Laravel\Handler\HandleNotificationFailedEvent;
+use Nadi\Laravel\Handler\HandleQueryExecutedEvent;
 
 return [
     'enabled' => env('NADI_ENABLED', true),
@@ -21,6 +21,17 @@ return [
     'connections' => [
         'log' => [
             'path' => env('NADI_STORAGE_PATH', storage_path('nadi/')),
+        ],
+        'http' => [
+            'key' => env('NADI_KEY'),
+            'token' => env('NADI_TOKEN'),
+            'endpoint' => env('NADI_ENDPOINT', 'https://api.nadi.pro'),
+        ],
+        'opentelemetry' => [
+            'endpoint' => env('NADI_OTEL_ENDPOINT', 'http://localhost:4318'),
+            'service_name' => env('NADI_OTEL_SERVICE_NAME', config('app.name', 'laravel-app')),
+            'service_version' => env('NADI_OTEL_SERVICE_VERSION', '1.0.0'),
+            'suppress_errors' => env('NADI_OTEL_SUPPRESS_ERRORS', true),
         ],
     ],
 

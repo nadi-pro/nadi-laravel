@@ -2,12 +2,12 @@
 
 namespace Nadi\Laravel\Handler;
 
+use Illuminate\Log\Events\MessageLogged;
+use Illuminate\Support\Arr;
 use Nadi\Data\Type;
 use Nadi\Laravel\Actions\ExceptionContext;
 use Nadi\Laravel\Actions\ExtractTags;
 use Nadi\Laravel\Data\ExceptionEntry;
-use Illuminate\Log\Events\MessageLogged;
-use Illuminate\Support\Arr;
 use Throwable;
 
 class HandleExceptionEvent extends Base

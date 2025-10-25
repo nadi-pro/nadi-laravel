@@ -2,13 +2,13 @@
 
 namespace Nadi\Laravel\Handler;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Notifications\Events\NotificationFailed;
 use Nadi\Data\Type;
 use Nadi\Laravel\Actions\ExtractTags;
 use Nadi\Laravel\Actions\FormatModel;
 use Nadi\Laravel\Data\Entry;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\AnonymousNotifiable;
-use Illuminate\Notifications\Events\NotificationFailed;
 
 class HandleNotificationFailedEvent extends Base
 {

@@ -2,9 +2,9 @@
 
 namespace Nadi\Laravel\Handler;
 
+use Illuminate\Console\Events\CommandFinished;
 use Nadi\Data\Type;
 use Nadi\Laravel\Data\Entry;
-use Illuminate\Console\Events\CommandFinished;
 use Symfony\Component\Console\Command\Command;
 
 class HandleCommandEvent extends Base

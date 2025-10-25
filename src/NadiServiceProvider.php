@@ -2,10 +2,10 @@
 
 namespace Nadi\Laravel;
 
+use Illuminate\Support\ServiceProvider;
 use Nadi\Laravel\Console\Commands\InstallCommand;
 use Nadi\Laravel\Console\Commands\TestCommand;
 use Nadi\Laravel\Console\Commands\VerifyCommand;
-use Illuminate\Support\ServiceProvider;
 
 class NadiServiceProvider extends ServiceProvider
 {

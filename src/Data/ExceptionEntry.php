@@ -2,9 +2,9 @@
 
 namespace Nadi\Laravel\Data;
 
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Nadi\Data\ExceptionEntry as DataExceptionEntry;
 use Nadi\Laravel\Concerns\InteractsWithMetric;
-use Illuminate\Contracts\Debug\ExceptionHandler;
 
 class ExceptionEntry extends DataExceptionEntry
 {

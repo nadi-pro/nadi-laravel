@@ -2,15 +2,15 @@
 
 namespace Nadi\Laravel\Handler;
 
+use Illuminate\Encryption\Encrypter;
+use Illuminate\Queue\Events\JobFailed;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Nadi\Data\Type;
 use Nadi\Laravel\Actions\ExceptionContext;
 use Nadi\Laravel\Actions\ExtractProperties;
 use Nadi\Laravel\Actions\ExtractTags;
 use Nadi\Laravel\Data\Entry;
-use Illuminate\Encryption\Encrypter;
-use Illuminate\Queue\Events\JobFailed;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use RuntimeException;
 
 class HandleFailedJobEvent extends Base

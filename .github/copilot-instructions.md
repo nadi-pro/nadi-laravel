@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Nadi Laravel is a Laravel-specific package that integrates with the Nadi PHP SDK to provide automated error/crash monitoring for Laravel applications. It follows an event-driven architecture using Laravel's event system to capture exceptions, slow queries, failed jobs, and other events automatically.
+Nadi Laravel is a Laravel-specific package that integrates with the Nadi PHP SDK to provide automated error/crash monitoring for Laravel applications. It follows an event-driven architecture using Laravel's event system to capture exceptions, slow queries, failed jobs, and other events automatically. The package supports multiple transport layers including OpenTelemetry for modern observability.
 
 ## Architecture
 
@@ -18,6 +18,13 @@ The package uses Laravel's event system with a centralized configuration in `con
     // ... more event mappings
 ]
 ```
+
+### Transport Layer Support
+
+The package supports multiple transport methods via the `NADI_DRIVER` environment variable:
+- **log**: Local file storage
+- **http**: HTTP API transport to Nadi service
+- **opentelemetry**: OpenTelemetry OTLP export for modern observability stacks
 
 ### Handler Pattern
 
@@ -72,12 +79,13 @@ ExceptionEntry::make($exception, Type::EXCEPTION, $data)
 
 Environment variables follow `NADI_` prefix convention:
 - `NADI_ENABLED` - Toggle monitoring on/off
-- `NADI_DRIVER` - Transport method (log, http)
+- `NADI_DRIVER` - Transport method (log, http, opentelemetry)
 - `NADI_QUERY_SLOW_THRESHOLD` - Database query monitoring threshold
+- `NADI_OTEL_*` - OpenTelemetry specific configuration (endpoint, service name, etc.)
 
-### Laravel Version Support
+### Version Support
 
-The package supports Laravel 6.x through 11.x with PHP 7.4-8.4. Use Orchestra Testbench for testing across Laravel versions.
+The package supports Laravel 9.x through 12.x with PHP 8.1-8.4. Use Orchestra Testbench for testing across Laravel versions.
 
 ## Integration Points
 

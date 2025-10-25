@@ -2,12 +2,8 @@
 
 namespace Nadi\Laravel;
 
-use InvalidArgumentException;
 use Nadi\Sampling\Config;
-use Nadi\Sampling\Contract as SamplingContract;
-use Nadi\Sampling\DynamicRateSampling;
 use Nadi\Sampling\FixedRateSampling;
-use Nadi\Sampling\IntervalSampling;
 use Nadi\Sampling\SamplingManager;
 use Nadi\Transporter\Contract;
 use Nadi\Transporter\Service;
@@ -17,8 +13,11 @@ class Transporter
     protected string $driver;
 
     protected Contract $transporter;
+
     protected SamplingManager $samplingManager;
+
     protected Service $service;
+
     protected $data;
 
     public function __construct()
@@ -65,7 +64,7 @@ class Transporter
             ? FixedRateSampling::class
             : $strategies[$strategy];
 
-        if(! in_array(\Nadi\Sampling\Contract::class, class_implements($class))) {
+        if (! in_array(\Nadi\Sampling\Contract::class, class_implements($class))) {
             throw new \Exception("$class not implement \Nadi\Sampling\Contract", 500);
         }
 
@@ -74,7 +73,7 @@ class Transporter
 
     public static function make()
     {
-        return new self();
+        return new self;
     }
 
     public function store(array $data)
@@ -84,7 +83,7 @@ class Transporter
 
     public function send()
     {
-       return $this->service->send();
+        return $this->service->send();
     }
 
     public function test()

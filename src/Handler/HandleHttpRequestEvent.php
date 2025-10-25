@@ -2,9 +2,6 @@
 
 namespace Nadi\Laravel\Handler;
 
-use Nadi\Data\Type;
-use Nadi\Laravel\Actions\FormatModel;
-use Nadi\Laravel\Data\Entry;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Http\Request;
@@ -12,6 +9,9 @@ use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Nadi\Data\Type;
+use Nadi\Laravel\Actions\FormatModel;
+use Nadi\Laravel\Data\Entry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 

@@ -2,10 +2,10 @@
 
 namespace Nadi\Laravel\Handler;
 
+use Illuminate\Database\Events\QueryExecuted;
 use Nadi\Data\Type;
 use Nadi\Laravel\Concerns\FetchesStackTrace;
 use Nadi\Laravel\Data\Entry;
-use Illuminate\Database\Events\QueryExecuted;
 
 class HandleQueryExecutedEvent extends Base
 {
@@ -103,7 +103,7 @@ class HandleQueryExecutedEvent extends Base
         try {
             return $event->connection->getPdo()->quote($binding);
         } catch (\PDOException $e) {
-            throw_if('IM001' !== $e->getCode(), $e);
+            throw_if($e->getCode() !== 'IM001', $e);
         }
 
         // Fallback when PDO::quote function is missing...
