@@ -31,7 +31,36 @@ return [
             'endpoint' => env('NADI_OTEL_ENDPOINT', 'http://localhost:4318'),
             'service_name' => env('NADI_OTEL_SERVICE_NAME', config('app.name', 'laravel-app')),
             'service_version' => env('NADI_OTEL_SERVICE_VERSION', '1.0.0'),
+            'service_namespace' => env('NADI_OTEL_SERVICE_NAMESPACE'),
+            'service_instance_id' => env('NADI_OTEL_SERVICE_INSTANCE_ID'),
+            'deployment_environment' => env('NADI_OTEL_DEPLOYMENT_ENVIRONMENT', config('app.env', 'production')),
             'suppress_errors' => env('NADI_OTEL_SUPPRESS_ERRORS', true),
+            'protocol' => env('NADI_OTEL_PROTOCOL', 'http/protobuf'), // http/protobuf, grpc, http/json
+            'timeout' => env('NADI_OTEL_TIMEOUT', 10), // seconds
+            'compression' => env('NADI_OTEL_COMPRESSION', 'gzip'), // gzip, none
+            'headers' => [
+                // Additional headers can be added via environment variables
+                // Format: NADI_OTEL_HEADER_<KEY>=<VALUE>
+            ],
+            'trace_sampling' => [
+                'ratio' => env('NADI_OTEL_TRACE_SAMPLING_RATIO', 1.0), // 0.0 to 1.0
+                'parent_based' => env('NADI_OTEL_TRACE_PARENT_BASED', true),
+            ],
+            'resource_attributes' => [
+                // Additional resource attributes
+                'telemetry.sdk.name' => 'nadi-laravel',
+                'telemetry.sdk.language' => 'php',
+                'telemetry.sdk.version' => '1.0.0',
+            ],
+            'span_limits' => [
+                'max_attributes_per_span' => env('NADI_OTEL_MAX_ATTRIBUTES_PER_SPAN', 128),
+                'max_events_per_span' => env('NADI_OTEL_MAX_EVENTS_PER_SPAN', 128),
+                'max_links_per_span' => env('NADI_OTEL_MAX_LINKS_PER_SPAN', 128),
+                'max_attribute_value_length' => env('NADI_OTEL_MAX_ATTRIBUTE_VALUE_LENGTH', 4096),
+            ],
+            // Middleware configuration
+            'auto_instrument_web' => env('NADI_OTEL_AUTO_INSTRUMENT_WEB', false),
+            'auto_instrument_api' => env('NADI_OTEL_AUTO_INSTRUMENT_API', false),
         ],
     ],
 

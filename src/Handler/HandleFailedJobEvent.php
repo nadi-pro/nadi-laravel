@@ -11,6 +11,7 @@ use Nadi\Laravel\Actions\ExceptionContext;
 use Nadi\Laravel\Actions\ExtractProperties;
 use Nadi\Laravel\Actions\ExtractTags;
 use Nadi\Laravel\Data\Entry;
+use Nadi\Laravel\Support\OpenTelemetrySemanticConventions;
 use RuntimeException;
 
 class HandleFailedJobEvent extends Base
@@ -38,26 +39,44 @@ class HandleFailedJobEvent extends Base
         }
 
         $queue = $job->getQueue();
+        $jobClass = data_get($payload, 'displayName') ?? data_get($payload, 'job');
+
+        // Generate OpenTelemetry semantic convention attributes
+        $otelAttributes = OpenTelemetrySemanticConventions::jobAttributes($jobClass, $queue);
+
+        // Add exception attributes
+        $exceptionAttributes = OpenTelemetrySemanticConventions::exceptionAttributes($event->exception);
+
+        // Add user context if available
+        $userAttributes = OpenTelemetrySemanticConventions::userAttributes();
+
+        // Add session context if available
+        $sessionAttributes = OpenTelemetrySemanticConventions::sessionAttributes();
+
+        // Merge all OpenTelemetry attributes
+        $otelData = array_merge($otelAttributes, $exceptionAttributes, $userAttributes, $sessionAttributes);
+
         $content = $this->defaultJobData(
             $connection, $queue, $payload,
             $this->data($payload)
         );
 
-        $this->store(Entry::make(
-            Type::QUEUE, [
-                'data' => $content,
-                'status' => 'failed',
-                'exception' => [
-                    'file' => $event->exception->getFile(),
-                    'message' => $event->exception->getMessage(),
-                    'trace' => $event->exception->getTrace(),
-                    'line' => $event->exception->getLine(),
-                    'line_preview' => ExceptionContext::get($event->exception),
-                ],
-            ])
-            ->tags(
-                array_merge($this->tags($payload), ['failed'])
-            )
+        $entryData = [
+            'data' => $content,
+            'status' => 'failed',
+            'exception' => [
+                'file' => $event->exception->getFile(),
+                'message' => $event->exception->getMessage(),
+                'trace' => $event->exception->getTrace(),
+                'line' => $event->exception->getLine(),
+                'line_preview' => ExceptionContext::get($event->exception),
+            ],
+            // Add OpenTelemetry semantic convention data
+            'otel' => $otelData,
+        ];
+
+        $this->store(Entry::make(Type::QUEUE, $entryData)
+            ->tags($this->generateTags($payload, $event))
             ->setHashFamily(
                 $this->hash(
                     Type::QUEUE.
@@ -68,6 +87,24 @@ class HandleFailedJobEvent extends Base
                     date('Y-m-d H')
                 )
             )->toArray());
+    }
+
+    /**
+     * Generate tags for the failed job event
+     */
+    protected function generateTags(array $payload, JobFailed $event): array
+    {
+        $tags = array_merge($this->tags($payload), ['failed']);
+
+        // Add OpenTelemetry standard tags
+        $jobClass = data_get($payload, 'displayName') ?? data_get($payload, 'job');
+        $tags[] = 'laravel.job.class:'.$jobClass;
+        $tags[] = 'laravel.job.queue:'.$event->job->getQueue();
+        $tags[] = 'laravel.job.status:failed';
+        $tags[] = 'exception.type:'.get_class($event->exception);
+        $tags[] = 'error.type:'.get_class($event->exception);
+
+        return $tags;
     }
 
     /**

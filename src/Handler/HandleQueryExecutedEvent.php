@@ -6,6 +6,7 @@ use Illuminate\Database\Events\QueryExecuted;
 use Nadi\Data\Type;
 use Nadi\Laravel\Concerns\FetchesStackTrace;
 use Nadi\Laravel\Data\Entry;
+use Nadi\Laravel\Support\OpenTelemetrySemanticConventions;
 
 class HandleQueryExecutedEvent extends Base
 {
@@ -23,18 +24,41 @@ class HandleQueryExecutedEvent extends Base
             return;
         }
 
+        // Generate OpenTelemetry semantic convention attributes
+        $otelAttributes = OpenTelemetrySemanticConventions::databaseAttributes(
+            $event->connectionName,
+            $this->replaceBindings($event),
+            $time
+        );
+
+        // Add user context if available
+        $userAttributes = OpenTelemetrySemanticConventions::userAttributes();
+
+        // Add session context if available
+        $sessionAttributes = OpenTelemetrySemanticConventions::sessionAttributes();
+
+        // Merge all OpenTelemetry attributes
+        $otelData = array_merge($otelAttributes, $userAttributes, $sessionAttributes);
+
         if ($caller = $this->getCallerFromStackTrace()) {
+            // Add code location to OTel data
+            $otelData['code.filepath'] = $caller['file'];
+            $otelData['code.lineno'] = $caller['line'];
+
+            $entryData = [
+                'connection' => $event->connectionName,
+                'bindings' => $event->bindings,
+                'sql' => $this->replaceBindings($event),
+                'time' => number_format($time, 2, '.', ''),
+                'slow' => true,
+                'file' => $caller['file'],
+                'line' => $caller['line'],
+                // Add OpenTelemetry semantic convention data
+                'otel' => $otelData,
+            ];
+
             $this->store(
-                Entry::make(
-                    Type::QUERY, [
-                        'connection' => $event->connectionName,
-                        'bindings' => $event->bindings,
-                        'sql' => $this->replaceBindings($event),
-                        'time' => number_format($time, 2, '.', ''),
-                        'slow' => true,
-                        'file' => $caller['file'],
-                        'line' => $caller['line'],
-                    ])
+                Entry::make(Type::QUERY, $entryData)
                     ->setHashFamily($this->hash($event->sql.date('Y-m-d')))
                     ->tags($this->tags($event))
                     ->toArray()
@@ -50,7 +74,30 @@ class HandleQueryExecutedEvent extends Base
      */
     protected function tags($event)
     {
-        return isset($this->options['slow']) && $event->time >= $this->options['slow'] ? ['slow'] : [];
+        $tags = [];
+
+        // Check if this is a slow query
+        $slowThreshold = config('nadi.query.slow-threshold');
+        if ($event->time >= $slowThreshold) {
+            $tags[] = 'slow';
+        }
+
+        // Add OpenTelemetry standard tags
+        $tags[] = 'db.system:'.(config("database.connections.{$event->connectionName}.driver") ?? 'unknown');
+        $tags[] = 'db.connection.name:'.$event->connectionName;
+
+        // Extract and tag operation
+        if (preg_match('/^\s*(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE)\s+/i', $event->sql, $matches)) {
+            $operation = strtoupper($matches[1]);
+            $tags[] = 'db.operation:'.$operation;
+        }
+
+        // Mark as slow query
+        if ($event->time > $slowThreshold) {
+            $tags[] = 'query.slow:true';
+        }
+
+        return $tags;
     }
 
     /**
