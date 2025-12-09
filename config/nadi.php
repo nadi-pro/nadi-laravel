@@ -23,8 +23,15 @@ return [
             'path' => env('NADI_STORAGE_PATH', storage_path('nadi/')),
         ],
         'http' => [
+            // New authentication (recommended): App ID + App Secret
+            'app_id' => env('NADI_APP_ID'),
+            'app_secret' => env('NADI_APP_SECRET'),
+
+            // Legacy authentication: API Key + App Token
+            // Used as fallback if app_id/app_secret are not set
             'key' => env('NADI_KEY'),
             'token' => env('NADI_TOKEN'),
+
             'endpoint' => env('NADI_ENDPOINT', 'https://api.nadi.pro'),
         ],
         'opentelemetry' => [
