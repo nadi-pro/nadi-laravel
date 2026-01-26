@@ -23,9 +23,10 @@ return [
             'path' => env('NADI_STORAGE_PATH', storage_path('nadi/')),
         ],
         'http' => [
-            'app_id' => env('NADI_APP_ID'),
-            'app_secret' => env('NADI_APP_SECRET'),
+            'apiKey' => env('NADI_API_KEY'),      // Sanctum personal access token
+            'token' => env('NADI_TOKEN'),          // Application identifier token
             'endpoint' => env('NADI_ENDPOINT', 'https://api.nadi.pro'),
+            'version' => env('NADI_API_VERSION', 'v1'),
         ],
         'opentelemetry' => [
             'endpoint' => env('NADI_OTEL_ENDPOINT', 'http://localhost:4318'),
