@@ -11,7 +11,7 @@ class Shipper
 
     public function __construct(?string $binaryDirectory = null)
     {
-        $directory = $binaryDirectory ?? storage_path('nadi/bin');
+        $directory = $binaryDirectory ?? base_path('vendor/bin');
         $this->manager = new BinaryManager($directory);
     }
 

@@ -26,7 +26,7 @@ php artisan nadi:install
 This will:
 
 1. Publish the `nadi.php` configuration file to your `config/` directory
-2. Automatically download and install the Nadi Shipper binary to `storage/nadi/bin/`
+2. Automatically download and install the Nadi Shipper binary to `vendor/bin/`
 
 ### Skip Shipper Installation
 
@@ -54,7 +54,7 @@ The Nadi Shipper is a lightweight Go binary that monitors a directory for JSON l
 The shipper binary is installed at:
 
 ```text
-storage/nadi/bin/shipper
+vendor/bin/shipper
 ```
 
 ### Manual Shipper Management
