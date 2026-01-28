@@ -1,21 +1,10 @@
 # Quick Start
 
-Configure your Nadi credentials and verify the connection.
+Verify your Nadi installation and test the connection.
 
-## Configure Environment Variables
+## Verify Installation
 
-Add your Nadi credentials to `.env`:
-
-```env
-NADI_ENABLED=true
-NADI_DRIVER=http
-NADI_API_KEY=your-sanctum-token
-NADI_APP_KEY=your-application-key
-```
-
-## Verify Configuration
-
-Run the verify command to check your setup:
+After running `php artisan nadi:install`, verify your setup:
 
 ```bash
 php artisan nadi:verify
@@ -27,6 +16,7 @@ This validates:
 - Driver configuration
 - Sampling settings
 - Directory permissions
+- API credentials
 
 ## Test Connectivity
 
@@ -34,6 +24,33 @@ Test the connection to your configured driver:
 
 ```bash
 php artisan nadi:test
+```
+
+## Choose Your Driver
+
+Nadi supports two primary workflows:
+
+### Log Driver with Shipper (Recommended)
+
+Best for production. Writes to local files, shipper forwards to API asynchronously.
+
+```env
+NADI_ENABLED=true
+NADI_DRIVER=log
+NADI_STORAGE_PATH=storage/nadi
+```
+
+Ensure the shipper is running via Supervisord (see [Installation](01-installation.md#shipper-setup)).
+
+### HTTP Driver (Direct)
+
+Sends data directly to the Nadi API. Simpler setup but adds latency to requests.
+
+```env
+NADI_ENABLED=true
+NADI_DRIVER=http
+NADI_API_KEY=your-sanctum-token
+NADI_APP_KEY=your-application-key
 ```
 
 ## What Gets Monitored
@@ -51,5 +68,6 @@ Once configured, Nadi automatically monitors:
 
 ## Next Steps
 
-- [Configuration Reference](../03-configuration/01-environment-variables.md) - All configuration options
+- [Environment Variables](../03-configuration/01-environment-variables.md) - All configuration options
 - [Transport Drivers](../03-configuration/02-transport-drivers.md) - HTTP, Log, OpenTelemetry setup
+- [Sampling Strategies](../03-configuration/03-sampling-strategies.md) - Control data collection rate
