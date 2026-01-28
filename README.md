@@ -41,8 +41,8 @@ php artisan nadi:install --skip-shipper
 After installation, configure your Nadi credentials in `config/nadi.php` or via environment variables:
 
 ```env
-NADI_API_KEY=your-api-key
-NADI_TOKEN=your-application-token
+NADI_API_KEY=your-sanctum-token
+NADI_APP_KEY=your-application-key
 ```
 
 ## Shipper Binary

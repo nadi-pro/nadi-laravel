@@ -82,7 +82,7 @@ class TestCommand extends Command
                 break;
 
             case 'http':
-                $this->line('• Verify your API credentials (NADI_KEY and NADI_TOKEN)');
+                $this->line('• Verify your API credentials (NADI_API_KEY and NADI_APP_KEY)');
                 $this->line('• Check the endpoint URL: '.config('nadi.connections.http.endpoint'));
                 $this->line('• Ensure network connectivity to the Nadi service');
                 break;

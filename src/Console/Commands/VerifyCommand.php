@@ -118,15 +118,15 @@ class VerifyCommand extends Command
     private function checkHttpConfig(): void
     {
         $endpoint = config('nadi.connections.http.endpoint');
-        $key = config('nadi.connections.http.key');
-        $token = config('nadi.connections.http.token');
+        $apiKey = config('nadi.connections.http.apiKey');
+        $appKey = config('nadi.connections.http.appKey');
 
         $this->line("   🌐 Endpoint: <comment>{$endpoint}</comment>");
-        $this->line('   🔑 API Key: '.($key ? '<info>Set</info>' : '<error>Missing</error>'));
-        $this->line('   🎫 Token: '.($token ? '<info>Set</info>' : '<error>Missing</error>'));
+        $this->line('   🔑 API Key: '.($apiKey ? '<info>Set</info>' : '<error>Missing</error>'));
+        $this->line('   🎫 App Key: '.($appKey ? '<info>Set</info>' : '<error>Missing</error>'));
 
-        if (! $key || ! $token) {
-            $this->warn('   Set NADI_KEY and NADI_TOKEN environment variables');
+        if (! $apiKey || ! $appKey) {
+            $this->warn('   Set NADI_API_KEY and NADI_APP_KEY environment variables');
         }
     }
 

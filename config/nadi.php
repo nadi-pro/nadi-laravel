@@ -23,8 +23,8 @@ return [
             'path' => env('NADI_STORAGE_PATH', storage_path('nadi/')),
         ],
         'http' => [
-            'apiKey' => env('NADI_API_KEY'),      // Sanctum personal access token
-            'token' => env('NADI_TOKEN'),          // Application identifier token
+            'apiKey' => env('NADI_API_KEY'),      // Sanctum personal access token (Authorization: Bearer)
+            'appKey' => env('NADI_APP_KEY'),      // Application identifier token (Nadi-App-Token header)
             'endpoint' => env('NADI_ENDPOINT', 'https://api.nadi.pro'),
             'version' => env('NADI_API_VERSION', 'v1'),
         ],
