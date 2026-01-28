@@ -3,6 +3,8 @@
 namespace Nadi\Laravel\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Nadi\Laravel\Shipper\Shipper;
 use Nadi\Shipper\Exceptions\ShipperException;
 use Nadi\Shipper\Exceptions\UnsupportedPlatformException;
@@ -10,13 +12,19 @@ use Nadi\Shipper\Exceptions\UnsupportedPlatformException;
 class InstallCommand extends Command
 {
     /**
+     * The reference YAML URL from GitHub.
+     */
+    private const REFERENCE_YAML_URL = 'https://raw.githubusercontent.com/nadi-pro/shipper/refs/heads/master/nadi.reference.yaml';
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
      */
     protected $signature = 'nadi:install
-                            {--force : Force overwrite existing config file}
-                            {--skip-shipper : Skip shipper binary installation}';
+                            {--force : Force overwrite existing config files}
+                            {--skip-shipper : Skip shipper binary installation}
+                            {--skip-config : Skip shipper config (nadi.yaml) setup}';
 
     /**
      * The console command description.
@@ -25,7 +33,7 @@ class InstallCommand extends Command
      */
     protected $description = 'Install Nadi for Laravel';
 
-    public function handle()
+    public function handle(): int
     {
         $this->publishConfig();
 
@@ -33,7 +41,14 @@ class InstallCommand extends Command
             $this->installShipper();
         }
 
+        if (! $this->option('skip-config')) {
+            $this->setupShipperConfig();
+        }
+
+        $this->newLine();
         $this->info('Successfully installed Nadi');
+
+        return self::SUCCESS;
     }
 
     /**
@@ -77,5 +92,220 @@ class InstallCommand extends Command
             $this->error('Failed to install shipper binary: '.$e->getMessage());
             $this->warn('You can install the shipper binary manually from: https://github.com/nadi-pro/shipper/releases');
         }
+    }
+
+    /**
+     * Setup the shipper configuration file (nadi.yaml).
+     */
+    private function setupShipperConfig(): void
+    {
+        $this->newLine();
+        $this->info('Setting up Nadi Shipper configuration...');
+
+        // Create storage directory
+        $storagePath = $this->getStoragePath();
+        $this->createStorageDirectory($storagePath);
+
+        // Check if config already exists
+        $configPath = $storagePath.'/nadi.yaml';
+        if (File::exists($configPath) && ! $this->option('force')) {
+            $this->warn("Config file already exists: {$configPath}");
+            $this->warn('Use --force to overwrite');
+
+            return;
+        }
+
+        // Download reference YAML from GitHub
+        $yamlContent = $this->downloadReferenceYaml();
+        if ($yamlContent === null) {
+            return;
+        }
+
+        // Ask for credentials
+        $credentials = $this->askForCredentials();
+
+        // Replace placeholders in YAML
+        $yamlContent = $this->configureYaml($yamlContent, $credentials, $storagePath);
+
+        // Save the config file
+        File::put($configPath, $yamlContent);
+        $this->info("Created config: {$configPath}");
+
+        // Show credential reminder if skipped
+        if (empty($credentials['apiKey']) || empty($credentials['appKey'])) {
+            $this->newLine();
+            $this->warn('API credentials not configured.');
+            $this->line('Get your API Key and App Key at: <comment>https://nadi.pro</comment>');
+            $this->line("Then update: <comment>{$configPath}</comment>");
+        }
+
+        // Show supervisord instructions
+        $this->displaySupervisordInstructions();
+    }
+
+    /**
+     * Get the storage path for Nadi logs.
+     */
+    private function getStoragePath(): string
+    {
+        return config('nadi.connections.log.path', storage_path('nadi'));
+    }
+
+    /**
+     * Create the storage directory if it doesn't exist.
+     */
+    private function createStorageDirectory(string $path): void
+    {
+        if (! File::isDirectory($path)) {
+            File::makeDirectory($path, 0755, true);
+            $this->line("Created directory: <info>{$path}</info>");
+        }
+
+        // Create .gitignore to exclude log files but keep config
+        $gitignorePath = $path.'/.gitignore';
+        if (! File::exists($gitignorePath)) {
+            File::put($gitignorePath, "*\n!.gitignore\n!nadi.yaml\n");
+        }
+    }
+
+    /**
+     * Download the reference YAML from GitHub.
+     */
+    private function downloadReferenceYaml(): ?string
+    {
+        $this->line('Downloading reference configuration from GitHub...');
+
+        try {
+            $response = Http::timeout(30)->get(self::REFERENCE_YAML_URL);
+
+            if ($response->successful()) {
+                $this->line('Reference configuration downloaded successfully');
+
+                return $response->body();
+            }
+
+            $this->error('Failed to download reference configuration: HTTP '.$response->status());
+            $this->warn('You can manually download from: '.self::REFERENCE_YAML_URL);
+
+            return null;
+        } catch (\Exception $e) {
+            $this->error('Failed to download reference configuration: '.$e->getMessage());
+            $this->warn('You can manually download from: '.self::REFERENCE_YAML_URL);
+
+            return null;
+        }
+    }
+
+    /**
+     * Ask user for API credentials.
+     */
+    private function askForCredentials(): array
+    {
+        $this->newLine();
+        $this->line('<comment>Configure API credentials</comment>');
+        $this->line('Get your credentials at: <info>https://nadi.pro</info>');
+        $this->line('Press Enter to skip and configure later.');
+        $this->newLine();
+
+        $apiKey = $this->ask('API Key (from your Nadi account)');
+        $appKey = $this->ask('App Key (from your application settings)');
+
+        return [
+            'apiKey' => $apiKey,
+            'appKey' => $appKey,
+        ];
+    }
+
+    /**
+     * Configure the YAML content with actual values.
+     */
+    private function configureYaml(string $yaml, array $credentials, string $storagePath): string
+    {
+        $endpoint = config('nadi.connections.http.endpoint', 'https://api.nadi.pro');
+
+        // Replace endpoint
+        $yaml = preg_replace(
+            '/^(\s*endpoint:\s*).*$/m',
+            '${1}'.$endpoint,
+            $yaml
+        );
+
+        // Replace apiKey
+        if (! empty($credentials['apiKey'])) {
+            $yaml = preg_replace(
+                '/^(\s*apiKey:\s*).*$/m',
+                '${1}'.$credentials['apiKey'],
+                $yaml
+            );
+        }
+
+        // Replace token (appKey)
+        if (! empty($credentials['appKey'])) {
+            $yaml = preg_replace(
+                '/^(\s*token:\s*).*$/m',
+                '${1}'.$credentials['appKey'],
+                $yaml
+            );
+        }
+
+        // Replace storage path
+        $yaml = preg_replace(
+            '/^(\s*storage:\s*).*$/m',
+            '${1}'.$storagePath,
+            $yaml
+        );
+
+        return $yaml;
+    }
+
+    /**
+     * Display supervisord configuration instructions.
+     */
+    private function displaySupervisordInstructions(): void
+    {
+        $shipper = new Shipper;
+        $binaryPath = $shipper->getBinaryPath();
+        $configPath = $this->getStoragePath().'/nadi.yaml';
+        $projectPath = base_path();
+        $appName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', config('app.name', 'laravel')));
+
+        $this->newLine();
+        $this->line('<comment>============================== Supervisord Setup ==============================</comment>');
+        $this->newLine();
+
+        $this->line('Create a supervisor config file:');
+        $this->line('<comment>sudo nano /etc/supervisor/conf.d/nadi-shipper.conf</comment>');
+        $this->newLine();
+
+        $supervisorConfig = <<<CONF
+[program:nadi-shipper-{$appName}]
+process_name=%(program_name)s
+command={$binaryPath} --config={$configPath}
+directory={$projectPath}
+autostart=true
+autorestart=true
+user=www-data
+numprocs=1
+redirect_stderr=true
+stdout_logfile={$projectPath}/storage/logs/shipper.log
+stdout_logfile_maxbytes=10MB
+stdout_logfile_backups=3
+stopwaitsecs=3600
+CONF;
+
+        $this->line($supervisorConfig);
+
+        $this->newLine();
+        $this->line('Then run:');
+        $this->line('<comment>sudo supervisorctl reread</comment>');
+        $this->line('<comment>sudo supervisorctl update</comment>');
+        $this->line("<comment>sudo supervisorctl start nadi-shipper-{$appName}</comment>");
+
+        $this->newLine();
+        $this->line('Check status:');
+        $this->line("<comment>sudo supervisorctl status nadi-shipper-{$appName}</comment>");
+
+        $this->newLine();
+        $this->line('<comment>===============================================================================</comment>');
     }
 }
