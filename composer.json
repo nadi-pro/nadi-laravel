@@ -61,12 +61,6 @@
             }
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/nadi-pro/nadi-php"
-        }
-    ],
     "minimum-stability": "stable",
     "prefer-stable": true
 }
