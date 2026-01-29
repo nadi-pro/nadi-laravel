@@ -81,6 +81,29 @@ class Shipper
     }
 
     /**
+     * Re-install the binary regardless of current version state.
+     *
+     * @param  string|null  $version  Specific version to install, or null for latest
+     * @return string The installed version
+     *
+     * @throws ShipperException
+     */
+    public function reInstall(?string $version = null): string
+    {
+        return $this->manager->reInstall($version);
+    }
+
+    /**
+     * Get the latest available version from GitHub.
+     *
+     * @throws \Nadi\Shipper\Exceptions\DownloadException
+     */
+    public function getLatestVersion(): string
+    {
+        return $this->manager->getLatestVersion();
+    }
+
+    /**
      * Uninstall the shipper binary.
      */
     public function uninstall(): void

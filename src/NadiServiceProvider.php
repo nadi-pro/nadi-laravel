@@ -6,6 +6,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Nadi\Laravel\Console\Commands\InstallCommand;
 use Nadi\Laravel\Console\Commands\TestCommand;
+use Nadi\Laravel\Console\Commands\UpdateShipperCommand;
 use Nadi\Laravel\Console\Commands\VerifyCommand;
 use Nadi\Laravel\Middleware\OpenTelemetryMiddleware;
 
@@ -30,6 +31,7 @@ class NadiServiceProvider extends ServiceProvider
             $this->commands([
                 InstallCommand::class,
                 TestCommand::class,
+                UpdateShipperCommand::class,
                 VerifyCommand::class,
             ]);
         }
