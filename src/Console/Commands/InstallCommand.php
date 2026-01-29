@@ -139,8 +139,8 @@ class InstallCommand extends Command
             $this->line("Then update: <comment>{$configPath}</comment>");
         }
 
-        // Show supervisord instructions
-        $this->displaySupervisordInstructions();
+        // Create supervisord config
+        $this->createSupervisordConfig();
     }
 
     /**
@@ -148,7 +148,7 @@ class InstallCommand extends Command
      */
     private function getStoragePath(): string
     {
-        return config('nadi.connections.log.path', storage_path('nadi'));
+        return rtrim(config('nadi.connections.log.path', storage_path('nadi')), '/');
     }
 
     /**
@@ -164,7 +164,20 @@ class InstallCommand extends Command
         // Create .gitignore to exclude log files but keep config
         $gitignorePath = $path.'/.gitignore';
         if (! File::exists($gitignorePath)) {
-            File::put($gitignorePath, "*\n!.gitignore\n!nadi.yaml\n");
+            File::put($gitignorePath, "*\n!.gitignore\n!nadi.yaml\n!dead-letter\n");
+        }
+
+        // Create dead-letter directory
+        $deadLetterPath = $path.'/dead-letter';
+        if (! File::isDirectory($deadLetterPath)) {
+            File::makeDirectory($deadLetterPath, 0755, true);
+            $this->line("Created directory: <info>{$deadLetterPath}</info>");
+        }
+
+        // Create .gitignore in dead-letter directory
+        $deadLetterGitignore = $deadLetterPath.'/.gitignore';
+        if (! File::exists($deadLetterGitignore)) {
+            File::put($deadLetterGitignore, "*\n!.gitignore\n");
         }
     }
 
@@ -259,23 +272,16 @@ class InstallCommand extends Command
     }
 
     /**
-     * Display supervisord configuration instructions.
+     * Create supervisord configuration file.
      */
-    private function displaySupervisordInstructions(): void
+    private function createSupervisordConfig(): void
     {
         $shipper = new Shipper;
         $binaryPath = $shipper->getBinaryPath();
-        $configPath = $this->getStoragePath().'/nadi.yaml';
+        $storagePath = $this->getStoragePath();
+        $configPath = $storagePath.'/nadi.yaml';
         $projectPath = base_path();
         $appName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', config('app.name', 'laravel')));
-
-        $this->newLine();
-        $this->line('<comment>============================== Supervisord Setup ==============================</comment>');
-        $this->newLine();
-
-        $this->line('Create a supervisor config file:');
-        $this->line('<comment>sudo nano /etc/supervisor/conf.d/nadi-shipper.conf</comment>');
-        $this->newLine();
 
         $supervisorConfig = <<<CONF
 [program:nadi-shipper-{$appName}]
@@ -293,7 +299,23 @@ stdout_logfile_backups=3
 stopwaitsecs=3600
 CONF;
 
-        $this->line($supervisorConfig);
+        $fileName = "nadi-shipper-{$appName}.conf";
+        $supervisordDir = '/etc/supervisor/conf.d';
+
+        $this->newLine();
+
+        if (File::isDirectory($supervisordDir)) {
+            $targetPath = $supervisordDir.'/'.$fileName;
+            File::put($targetPath, $supervisorConfig);
+            $this->info("Supervisord config created: {$targetPath}");
+        } else {
+            $targetPath = $storagePath.'/'.$fileName;
+            File::put($targetPath, $supervisorConfig);
+            $this->info("Supervisord config created: {$targetPath}");
+            $this->warn("Supervisord directory ({$supervisordDir}) not found.");
+            $this->line('Copy the config when supervisord is available:');
+            $this->line("<comment>sudo cp {$targetPath} {$supervisordDir}/{$fileName}</comment>");
+        }
 
         $this->newLine();
         $this->line('Then run:');
@@ -304,8 +326,5 @@ CONF;
         $this->newLine();
         $this->line('Check status:');
         $this->line("<comment>sudo supervisorctl status nadi-shipper-{$appName}</comment>");
-
-        $this->newLine();
-        $this->line('<comment>===============================================================================</comment>');
     }
 }

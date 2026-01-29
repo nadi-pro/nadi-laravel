@@ -20,7 +20,7 @@ return [
 
     'connections' => [
         'log' => [
-            'path' => env('NADI_STORAGE_PATH', storage_path('nadi/')),
+            'path' => env('NADI_STORAGE_PATH', storage_path('nadi')),
         ],
         'http' => [
             'apiKey' => env('NADI_API_KEY'),      // Sanctum personal access token (Authorization: Bearer)
