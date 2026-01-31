@@ -124,6 +124,9 @@ class InstallCommand extends Command
         // Ask for credentials
         $credentials = $this->askForCredentials();
 
+        // Update .env file with credentials
+        $this->updateEnvFile($credentials);
+
         // Replace placeholders in YAML
         $yamlContent = $this->configureYaml($yamlContent, $credentials, $storagePath);
 
@@ -135,8 +138,9 @@ class InstallCommand extends Command
         if (empty($credentials['apiKey']) || empty($credentials['appKey'])) {
             $this->newLine();
             $this->warn('API credentials not configured.');
-            $this->line('Get your API Key and App Key at: <comment>https://nadi.pro</comment>');
-            $this->line("Then update: <comment>{$configPath}</comment>");
+            $this->line('Create your API Key at: <comment>https://nadi.pro/user/api-tokens</comment>');
+            $this->line('Find your App Key in your application page at: <comment>https://nadi.pro</comment>');
+            $this->line("Then update your <comment>.env</comment> file and <comment>{$configPath}</comment>");
         }
 
         // Create supervisord config
@@ -216,17 +220,53 @@ class InstallCommand extends Command
     {
         $this->newLine();
         $this->line('<comment>Configure API credentials</comment>');
-        $this->line('Get your credentials at: <info>https://nadi.pro</info>');
+        $this->line('Create your API Key at: <info>https://nadi.pro/user/api-tokens</info>');
+        $this->line('Find your App Key in your application page at: <info>https://nadi.pro</info>');
         $this->line('Press Enter to skip and configure later.');
         $this->newLine();
 
-        $apiKey = $this->ask('API Key (from your Nadi account)');
-        $appKey = $this->ask('App Key (from your application settings)');
+        $apiKey = $this->ask('API Key (from https://nadi.pro/user/api-tokens)');
+        $appKey = $this->ask('App Key (from your application page)');
 
         return [
             'apiKey' => $apiKey,
             'appKey' => $appKey,
         ];
+    }
+
+    /**
+     * Update the .env file with Nadi credentials.
+     */
+    private function updateEnvFile(array $credentials): void
+    {
+        $envPath = base_path('.env');
+
+        if (! File::exists($envPath)) {
+            return;
+        }
+
+        $envContent = File::get($envPath);
+
+        $keys = [
+            'NADI_API_KEY' => $credentials['apiKey'] ?? '',
+            'NADI_APP_KEY' => $credentials['appKey'] ?? '',
+        ];
+
+        foreach ($keys as $key => $value) {
+            if (preg_match("/^{$key}=.*/m", $envContent)) {
+                $envContent = preg_replace(
+                    "/^{$key}=.*/m",
+                    "{$key}={$value}",
+                    $envContent
+                );
+            } else {
+                $envContent .= "\n{$key}={$value}";
+            }
+        }
+
+        File::put($envPath, $envContent);
+
+        $this->line('Updated <info>.env</info> with NADI_API_KEY and NADI_APP_KEY');
     }
 
     /**
