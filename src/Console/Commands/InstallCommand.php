@@ -283,20 +283,18 @@ class InstallCommand extends Command
         $projectPath = base_path();
         $appName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', config('app.name', 'laravel')));
 
+        $user = get_current_user();
+
         $supervisorConfig = <<<CONF
 [program:nadi-shipper-{$appName}]
-process_name=%(program_name)s
-command={$binaryPath} --config={$configPath}
-directory={$projectPath}
+command={$binaryPath} --config="{$configPath}" --record
+directory=/
+redirect_stderr=true
 autostart=true
 autorestart=true
-user=www-data
+user={$user}
 numprocs=1
-redirect_stderr=true
-stdout_logfile={$projectPath}/storage/logs/shipper.log
-stdout_logfile_maxbytes=10MB
-stdout_logfile_backups=3
-stopwaitsecs=3600
+process_name=%(program_name)s_%(process_num)s
 CONF;
 
         $fileName = "nadi-shipper-{$appName}.conf";

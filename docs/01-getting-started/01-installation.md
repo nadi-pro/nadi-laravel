@@ -74,18 +74,14 @@ Add the following configuration (paths are shown during installation):
 
 ```ini
 [program:nadi-shipper-your-app]
-process_name=%(program_name)s
-command=/path/to/project/vendor/bin/shipper --config=/path/to/project/storage/nadi/nadi.yaml
-directory=/path/to/project
+command=/path/to/project/vendor/bin/shipper --config="/path/to/project/storage/nadi/nadi.yaml" --record
+directory=/
+redirect_stderr=true
 autostart=true
 autorestart=true
-user=www-data
+user=your-user
 numprocs=1
-redirect_stderr=true
-stdout_logfile=/path/to/project/storage/logs/shipper.log
-stdout_logfile_maxbytes=10MB
-stdout_logfile_backups=3
-stopwaitsecs=3600
+process_name=%(program_name)s_%(process_num)s
 ```
 
 Apply the configuration:
