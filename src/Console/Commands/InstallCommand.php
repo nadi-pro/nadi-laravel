@@ -292,10 +292,10 @@ class InstallCommand extends Command
             );
         }
 
-        // Replace token (appKey)
+        // Replace appKey
         if (! empty($credentials['appKey'])) {
             $yaml = preg_replace(
-                '/^(\s*token:\s*).*$/m',
+                '/^(\s*appKey:\s*).*$/m',
                 '${1}'.$credentials['appKey'],
                 $yaml
             );

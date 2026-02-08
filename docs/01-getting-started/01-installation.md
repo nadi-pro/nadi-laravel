@@ -105,7 +105,7 @@ If you skipped credentials during installation, update `storage/nadi/nadi.yaml`:
 ```yaml
 nadi:
   apiKey: your-api-key-here
-  token: your-app-key-here
+  appKey: your-app-key-here
 ```
 
 Or set environment variables for the Laravel HTTP driver:
