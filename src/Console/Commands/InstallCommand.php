@@ -274,7 +274,7 @@ class InstallCommand extends Command
      */
     private function configureYaml(string $yaml, array $credentials, string $storagePath): string
     {
-        $endpoint = config('nadi.connections.http.endpoint', 'https://api.nadi.pro');
+        $endpoint = config('nadi.connections.http.endpoint', 'https://nadi.pro/api');
 
         // Replace endpoint
         $yaml = preg_replace(

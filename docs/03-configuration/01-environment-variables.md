@@ -15,7 +15,7 @@ Complete reference of all configuration options.
 | ------------------ | --------------------- | ------------------------------ |
 | `NADI_API_KEY`     | -                     | Sanctum personal access token  |
 | `NADI_APP_KEY`     | -                     | Application identifier token   |
-| `NADI_ENDPOINT`    | `https://api.nadi.pro`| Nadi API endpoint              |
+| `NADI_ENDPOINT`    | `https://nadi.pro/api`| Nadi API endpoint              |
 | `NADI_API_VERSION` | `v1`                  | API version                    |
 
 ## Log Driver

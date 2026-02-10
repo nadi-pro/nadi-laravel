@@ -21,7 +21,7 @@ Sends data directly to the Nadi API over HTTP.
 NADI_DRIVER=http
 NADI_API_KEY=your-sanctum-token
 NADI_APP_KEY=your-application-key
-NADI_ENDPOINT=https://api.nadi.pro
+NADI_ENDPOINT=https://nadi.pro/api
 ```
 
 | Header                  | Source         | Purpose                |
