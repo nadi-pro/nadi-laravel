@@ -4,10 +4,11 @@ namespace Nadi\Laravel\Tests\Features;
 
 use Nadi\Laravel\Support\OpenTelemetrySemanticConventions;
 use Nadi\Laravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class OpenTelemetrySemanticConventionsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_has_laravel_specific_constants()
     {
         // Laravel-specific constants
@@ -19,7 +20,7 @@ class OpenTelemetrySemanticConventionsTest extends TestCase
         $this->assertEquals('laravel.job.queue', OpenTelemetrySemanticConventions::LARAVEL_JOB_QUEUE);
     }
 
-    /** @test */
+    #[Test]
     public function it_inherits_core_constants()
     {
         // Core constants inherited from parent class
@@ -37,7 +38,7 @@ class OpenTelemetrySemanticConventionsTest extends TestCase
         $this->assertEquals('user.id', OpenTelemetrySemanticConventions::USER_ID);
     }
 
-    /** @test */
+    #[Test]
     public function it_delegates_exception_attributes_to_parent()
     {
         $exception = new \RuntimeException('Test exception', 500);
@@ -51,7 +52,7 @@ class OpenTelemetrySemanticConventionsTest extends TestCase
         $this->assertArrayHasKey(OpenTelemetrySemanticConventions::CODE_LINENO, $attributes);
     }
 
-    /** @test */
+    #[Test]
     public function it_delegates_performance_attributes_to_parent()
     {
         $startTime = microtime(true) - 0.1; // 100ms ago
@@ -66,7 +67,7 @@ class OpenTelemetrySemanticConventionsTest extends TestCase
         $this->assertEquals($memoryPeak, $attributes[OpenTelemetrySemanticConventions::MEMORY_USAGE]);
     }
 
-    /** @test */
+    #[Test]
     public function it_provides_laravel_specific_helper_methods()
     {
         // Test Laravel job attributes
