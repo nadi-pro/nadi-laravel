@@ -2,59 +2,27 @@ name: run-tests
 
 on:
   push:
-    branches: [master, 1.0]
-  pull_request:
-    branches: [master, 1.0]
+    paths:
+      - '**.php'
+      - '.github/workflows/run-tests.yml'
+      - 'phpunit.xml'
+      - 'composer.json'
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     strategy:
       fail-fast: true
       matrix:
+        php: [8.4, 8.3]
+        laravel: [12.*]
+        stability: [prefer-stable]
         include:
-          - php: 8.4
-            laravel: 12.*
-            phpunit: ^11.0
-            ramsey: ^4.7
-          - php: 8.4
-            laravel: 11.*
-            phpunit: ^10.1
-            ramsey: ^4.7
-          - php: 8.3
-            laravel: 12.*
-            phpunit: ^11.0
-            ramsey: ^4.7
-          - php: 8.3
-            laravel: 11.*
-            phpunit: ^10.1
-            ramsey: ^4.7
-          - php: 8.3
-            laravel: 10.*
-            phpunit: ^10.1
-            ramsey: ^4.7
-          - php: 8.2
-            laravel: 11.*
-            phpunit: ^10.1
-            ramsey: ^4.7
-          - php: 8.2
-            laravel: 10.*
-            phpunit: ^10.1
-            ramsey: ^4.7
-          - php: 8.3
-            laravel: 9.*
-            phpunit: ^9.0
-            ramsey: ^4.7
-          - php: 8.2
-            laravel: 9.*
-            phpunit: ^9.0
-            ramsey: ^4.7
-          - php: 8.1
-            laravel: 9.*
-            phpunit: ^9.0
-            ramsey: ^4.7
+          - laravel: 12.*
+            testbench: 10.*
 
-    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
@@ -69,9 +37,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "illuminate/support:${{ matrix.laravel }}" "ramsey/uuid:${{ matrix.ramsey }}" --no-interaction --no-update
-          composer require "phpunit/phpunit:${{ matrix.phpunit }}" --no-interaction --no-update --dev
-          composer update --prefer-stable --prefer-dist --no-interaction
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
