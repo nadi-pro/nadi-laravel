@@ -44,5 +44,8 @@ jobs:
       - name: List Installed Dependencies
         run: composer show -D
 
+      - name: Audit dependencies for known vulnerabilities
+        run: composer audit
+
       - name: Execute tests
         run: vendor/bin/phpunit

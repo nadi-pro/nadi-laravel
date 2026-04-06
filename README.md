@@ -116,6 +116,21 @@ php artisan nadi:test
 php artisan nadi:verify
 ```
 
+## Security & Data Privacy
+
+> **Important:** Nadi captures and transmits application error data including
+> exception messages, stack traces, SQL queries, HTTP request details, and
+> custom content. This data may contain Personally Identifiable Information (PII).
+
+**As the consumer, you are responsible for:**
+
+- Sanitizing or redacting PII from entry content
+- Filtering sensitive HTTP headers (e.g., `Authorization`, `Cookie`) from captured data
+- Ensuring compliance with your organization's data handling policies (GDPR, HIPAA, SOC2, etc.)
+- Using HTTPS endpoints for all transporters in production environments
+
+See [SECURITY.md](SECURITY.md) for vulnerability reporting and security considerations.
+
 ## Documentation
 
 Refer to [documentation](https://docs.nadi.pro) for detailed installation and usage instructions.
